@@ -32,3 +32,6 @@ dist-ssr
 *.sw?
 
 agent/
+
+# Vercel
+.vercel/
