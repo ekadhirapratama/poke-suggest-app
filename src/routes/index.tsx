@@ -89,11 +89,11 @@ function Index() {
   return (
     <main className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
+      <header className="sticky top-0 z-20 bg-card">
         <div className="mx-auto flex max-w-md items-center gap-2 px-4 py-3">
           <img src={logoSrc} alt="PokeSuggest" className="h-9 w-9" />
           <div>
-            <h1 className="text-base font-bold leading-none">PokeSuggest</h1>
+            <h1 className="text-base font-bold leading-none uppercase tracking-wide">PokeSuggest</h1>
             <p className="text-[11px] text-muted-foreground">Top 3 picks by type matchup</p>
           </div>
         </div>
@@ -118,7 +118,7 @@ function Index() {
                 {team.map((p, i) => (
                   <Card key={i} className="p-3">
                     <div className="mb-2 flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[11px] font-bold">
+                      <span className="flex h-6 w-6 items-center justify-center bg-muted text-[11px] font-bold">
                         {i + 1}
                       </span>
                       <Input
@@ -160,7 +160,7 @@ function Index() {
           <section>
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Swords className="h-4 w-4 text-destructive" />
+                <Swords className="h-4 w-4 text-accent" />
                 <h2 className="text-sm font-semibold uppercase tracking-wide">Enemy Team</h2>
               </div>
               <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={resetEnemies}>
@@ -171,7 +171,7 @@ function Index() {
               {enemies.map((e, i) => (
                 <Card key={i} className="p-3">
                   <div className="mb-2 flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-destructive/10 text-[11px] font-bold text-destructive">
+                    <span className="flex h-6 w-6 items-center justify-center bg-destructive/10 text-[11px] font-bold text-destructive">
                       {i + 1}
                     </span>
                     <span className="text-xs text-muted-foreground">Enemy #{i + 1}</span>
@@ -225,7 +225,7 @@ function Index() {
                     className="flex w-14 items-center justify-center text-2xl font-black text-white"
                     style={{
                       backgroundColor:
-                        rank === 0 ? "#f4d23c" : rank === 1 ? "#9099a1" : "#d97746",
+                        rank === 0 ? "#FFC000" : rank === 1 ? "#969696" : "#664422",
                     }}
                   >
                     #{rank + 1}
@@ -235,7 +235,7 @@ function Index() {
                       <p className="font-semibold">
                         {r.poke.name || `Pokémon #${r.idx + 1}`}
                       </p>
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                      <span className="bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
                         Score {r.score}
                       </span>
                     </div>
