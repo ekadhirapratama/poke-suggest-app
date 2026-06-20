@@ -8,7 +8,9 @@ import {
   emptyEnemy, emptyMy, scorePokemon,
   type EnemyPoke, type MyPoke, type PokeType,
 } from "@/lib/pokemon";
-import { Sparkles, Swords, Shield } from "lucide-react";
+import { Sparkles, Swords, Shield, ChevronDown } from "lucide-react";
+import logoSrc from "@/assets/logo_poke-champ.webp";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,9 +65,11 @@ function Index() {
   const updateEnemy = (i: number, patch: Partial<EnemyPoke>) =>
     setEnemies((t) => t.map((p, idx) => (idx === i ? { ...p, ...patch } : p)));
 
+  const hasMyTeam = useMemo(() => team.some((p) => p.type1), [team]);
+
   const canSuggest = useMemo(
-    () => enemies.every((e) => !!e.type1) && team.some((p) => p.type1),
-    [enemies, team]
+    () => enemies.every((e) => !!e.type1) && hasMyTeam,
+    [enemies, hasMyTeam]
   );
 
   const onSuggest = () => {
@@ -87,9 +91,7 @@ function Index() {
       {/* Header */}
       <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-md items-center gap-2 px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Sparkles className="h-5 w-5" />
-          </div>
+          <img src={logoSrc} alt="PokeSuggest" className="h-9 w-9" />
           <div>
             <h1 className="text-base font-bold leading-none">PokeSuggest</h1>
             <p className="text-[11px] text-muted-foreground">Top 3 picks by type matchup</p>
@@ -100,97 +102,111 @@ function Index() {
       <div className="mx-auto max-w-md space-y-6 px-4 pt-4">
         {/* My Team */}
         <section>
-          <div className="mb-3 flex items-center gap-2">
-            <Shield className="h-4 w-4 text-primary" />
-            <h2 className="text-sm font-semibold uppercase tracking-wide">My Team</h2>
-            <span className="text-xs text-muted-foreground">(auto-saved)</span>
-          </div>
-          <div className="space-y-3">
-            {team.map((p, i) => (
-              <Card key={i} className="p-3">
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[11px] font-bold">
-                    {i + 1}
-                  </span>
-                  <Input
-                    value={p.name}
-                    onChange={(e) => updateMy(i, { name: e.target.value })}
-                    placeholder={`Pokémon #${i + 1} name`}
-                    className="h-9"
-                  />
-                </div>
-                <div className="mb-2 grid grid-cols-2 gap-2">
-                  <TypeSelect value={p.type1} onChange={(v) => updateMy(i, { type1: v })} placeholder="Type 1" />
-                  <TypeSelect
-                    value={p.type2} allowEmpty
-                    exclude={[p.type1]}
-                    onChange={(v) => updateMy(i, { type2: v })}
-                    placeholder="Type 2"
-                  />
-                </div>
-                <p className="mb-1 text-[11px] font-medium text-muted-foreground">Moves</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {p.moves.map((m, mi) => (
-                    <TypeSelect
-                      key={mi}
-                      value={m}
-                      onChange={(v) => updateMyMove(i, mi, v)}
-                      placeholder={`Move ${mi + 1}`}
-                      allowEmpty
-                    />
-                  ))}
-                </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Enemy Team */}
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Swords className="h-4 w-4 text-destructive" />
-              <h2 className="text-sm font-semibold uppercase tracking-wide">Enemy Team</h2>
+          <Collapsible defaultOpen>
+            <div className="mb-3 flex items-center gap-2">
+              <Shield className="h-4 w-4 text-primary" />
+              <CollapsibleTrigger asChild>
+                <h2 className="flex cursor-pointer items-center gap-1 text-sm font-semibold uppercase tracking-wide">
+                  My Team
+                  <ChevronDown className="h-4 w-4 transition-transform" />
+                </h2>
+              </CollapsibleTrigger>
+              <span className="text-xs text-muted-foreground">(auto-saved)</span>
             </div>
-            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={resetEnemies}>
-              Clear
-            </Button>
-          </div>
-          <div className="space-y-3">
-            {enemies.map((e, i) => (
-              <Card key={i} className="p-3">
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-destructive/10 text-[11px] font-bold text-destructive">
-                    {i + 1}
-                  </span>
-                  <span className="text-xs text-muted-foreground">Enemy #{i + 1}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <TypeSelect value={e.type1} onChange={(v) => updateEnemy(i, { type1: v })} placeholder="Type 1" />
-                  <TypeSelect
-                    value={e.type2} allowEmpty exclude={[e.type1]}
-                    onChange={(v) => updateEnemy(i, { type2: v })}
-                    placeholder="Type 2 (opt)"
-                  />
-                </div>
-              </Card>
-            ))}
-          </div>
+            <CollapsibleContent>
+              <div className="space-y-3">
+                {team.map((p, i) => (
+                  <Card key={i} className="p-3">
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[11px] font-bold">
+                        {i + 1}
+                      </span>
+                      <Input
+                        value={p.name}
+                        onChange={(e) => updateMy(i, { name: e.target.value })}
+                        placeholder={`Pokémon #${i + 1} name`}
+                        className="h-9"
+                      />
+                    </div>
+                    <div className="mb-2 grid grid-cols-2 gap-2">
+                      <TypeSelect value={p.type1} onChange={(v) => updateMy(i, { type1: v })} placeholder="Type 1" />
+                      <TypeSelect
+                        value={p.type2} allowEmpty
+                        exclude={[p.type1]}
+                        onChange={(v) => updateMy(i, { type2: v })}
+                        placeholder="Type 2"
+                      />
+                    </div>
+                    <p className="mb-1 text-[11px] font-medium text-muted-foreground">Moves</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {p.moves.map((m, mi) => (
+                        <TypeSelect
+                          key={mi}
+                          value={m}
+                          onChange={(v) => updateMyMove(i, mi, v)}
+                          placeholder={`Move ${mi + 1}`}
+                          allowEmpty
+                        />
+                      ))}
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </section>
 
-        <Button
-          onClick={onSuggest}
-          disabled={!canSuggest}
-          size="lg"
-          className="w-full h-12 text-base font-semibold"
-        >
-          <Sparkles className="mr-2 h-5 w-5" />
-          Get Suggestion
-        </Button>
-        {!canSuggest && (
-          <p className="-mt-3 text-center text-xs text-muted-foreground">
-            Set at least Type 1 for every enemy and one of your Pokémon.
-          </p>
+        {hasMyTeam && (
+          <section>
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Swords className="h-4 w-4 text-destructive" />
+                <h2 className="text-sm font-semibold uppercase tracking-wide">Enemy Team</h2>
+              </div>
+              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={resetEnemies}>
+                Clear
+              </Button>
+            </div>
+            <div className="space-y-3">
+              {enemies.map((e, i) => (
+                <Card key={i} className="p-3">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-destructive/10 text-[11px] font-bold text-destructive">
+                      {i + 1}
+                    </span>
+                    <span className="text-xs text-muted-foreground">Enemy #{i + 1}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <TypeSelect value={e.type1} onChange={(v) => updateEnemy(i, { type1: v })} placeholder="Type 1" />
+                    <TypeSelect
+                      value={e.type2} allowEmpty exclude={[e.type1]}
+                      onChange={(v) => updateEnemy(i, { type2: v })}
+                      placeholder="Type 2 (opt)"
+                    />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {hasMyTeam && (
+          <>
+            <Button
+              onClick={onSuggest}
+              disabled={!canSuggest}
+              size="lg"
+              className="w-full h-12 text-base font-semibold"
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Get Suggestion
+            </Button>
+            {!canSuggest && (
+              <p className="-mt-3 text-center text-xs text-muted-foreground">
+                Set at least Type 1 for every enemy and one of your Pokémon.
+              </p>
+            )}
+          </>
         )}
 
         {/* Result */}
