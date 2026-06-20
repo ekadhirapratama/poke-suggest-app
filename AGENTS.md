@@ -1,4 +1,5 @@
 <!-- LOVABLE:BEGIN -->
+
 > [!IMPORTANT]
 > This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
 > published git history — force pushing, or rebasing/amending/squashing commits
@@ -7,6 +8,7 @@
 >
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
+
 <!-- LOVABLE:END -->
 
 # PokeSuggest - Project Context & Rules for AI Agents
@@ -27,12 +29,12 @@ This file provides comprehensive context and rules about the **PokeSuggest App**
 
 ## 1. Tech Stack & Frameworks
 
-* **Core Library & State:** React 19.2.x, using TypeScript (`.tsx`, `.ts`).
-* **Routing & SSR:** TanStack Start (`@tanstack/react-start`), TanStack Router (`@tanstack/react-router`), and TanStack Query (`@tanstack/react-query`).
-* **Bundler & Dev Server:** Vite 8.x using `@lovable.dev/vite-tanstack-config` wrapper presets.
-* **Styling:** Tailwind CSS v4.
-* **Component Primitives:** Radix UI wrapper components configured inside `src/components/ui/` (equivalent to Shadcn/UI setup).
-* **Package Manager:** Bun (uses `bun.lock` and `package.json`).
+- **Core Library & State:** React 19.2.x, using TypeScript (`.tsx`, `.ts`).
+- **Routing & SSR:** TanStack Start (`@tanstack/react-start`), TanStack Router (`@tanstack/react-router`), and TanStack Query (`@tanstack/react-query`).
+- **Bundler & Dev Server:** Vite 8.x using `@lovable.dev/vite-tanstack-config` wrapper presets.
+- **Styling:** Tailwind CSS v4.
+- **Component Primitives:** Radix UI wrapper components configured inside `src/components/ui/` (equivalent to Shadcn/UI setup).
+- **Package Manager:** Bun (uses `bun.lock` and `package.json`).
 
 ---
 
@@ -66,21 +68,22 @@ src/
 ## 3. Core Logic & Matchup Calculations (`src/lib/pokemon.ts`)
 
 Scoring is computed in `scorePokemon(mine: MyPoke, enemies: EnemyPoke[])`:
-* **Offense (+1 per weakness matched):** For every move in the user's selected Pokémon moves array (max 4 moves), add `+1` if the defending enemy type is weak to that move's type.
-* **Defense (-1 per weakness matched):** For every active type on the user's Pokémon (type1 and optional type2), subtract `-1` if the user's type is weak to any of the enemy's active types.
-* **Inactive/Empty Slots:** Pokemon without `type1` set are skipped during scoring and recommendation.
+
+- **Offense (+1 per weakness matched):** For every move in the user's selected Pokémon moves array (max 4 moves), add `+1` if the defending enemy type is weak to that move's type.
+- **Defense (-1 per weakness matched):** For every active type on the user's Pokémon (type1 and optional type2), subtract `-1` if the user's type is weak to any of the enemy's active types.
+- **Inactive/Empty Slots:** Pokemon without `type1` set are skipped during scoring and recommendation.
 
 ---
 
 ## 4. Key Configurations
 
-* **`vite.config.ts`**: Delegates configuration settings to `@lovable.dev/vite-tanstack-config`. The custom server entry point is routed to `server.ts`.
-* **Local Storage Storage:** The user's custom Pokemon team is auto-saved to `localStorage` under `my_pokemon_team`. Safely handle SSR check (`typeof window === "undefined"`) when accessing local storage.
+- **`vite.config.ts`**: Delegates configuration settings to `@lovable.dev/vite-tanstack-config`. The custom server entry point is routed to `server.ts`.
+- **Local Storage Storage:** The user's custom Pokemon team is auto-saved to `localStorage` under `my_pokemon_team`. Safely handle SSR check (`typeof window === "undefined"`) when accessing local storage.
 
 ---
 
 ## 5. Typical Workflows
 
-* **Adding a Route:** Create a `.tsx` file in `src/routes/` using TanStack's `createFileRoute`. Start the dev server so the route is detected and added to `src/routeTree.gen.ts`.
-* **Using Tailwind Classes:** Utilize Tailwind utility classes in components. Make sure any new design tokens are defined inside the `@theme inline` block in `src/styles.css`.
-* **Updating Pokemon Data:** Modify the `TYPES`, `POKEMON_WEAKNESS` dictionary, or scoring parameters directly in `src/lib/pokemon.ts`.
+- **Adding a Route:** Create a `.tsx` file in `src/routes/` using TanStack's `createFileRoute`. Start the dev server so the route is detected and added to `src/routeTree.gen.ts`.
+- **Using Tailwind Classes:** Utilize Tailwind utility classes in components. Make sure any new design tokens are defined inside the `@theme inline` block in `src/styles.css`.
+- **Updating Pokemon Data:** Modify the `TYPES`, `POKEMON_WEAKNESS` dictionary, or scoring parameters directly in `src/lib/pokemon.ts`.

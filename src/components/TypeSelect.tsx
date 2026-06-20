@@ -1,6 +1,10 @@
 import { TYPES, TYPE_ICON, TYPE_COLOR, type PokeType } from "@/lib/pokemon";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 
 interface Props {
@@ -18,7 +22,7 @@ export function TypeIcon({ type, size = 28 }: { type: PokeType; size?: number })
       alt={type}
       width={size}
       height={size}
-      className="rounded-full shrink-0"
+      className="rounded-full shrink-0 border border-black/40"
       style={{ width: size, height: size }}
     />
   );
@@ -27,39 +31,60 @@ export function TypeIcon({ type, size = 28 }: { type: PokeType; size?: number })
 export function TypeBadge({ type }: { type: PokeType }) {
   return (
     <div
-      className="inline-flex items-center gap-1.5 rounded-full pl-1 pr-3 py-1 text-xs font-semibold text-white"
+      className="inline-flex items-center gap-1.5 rounded-none pl-1.5 pr-3 py-1 text-[9px] font-black uppercase tracking-widest text-white border border-white/10"
       style={{ backgroundColor: TYPE_COLOR[type] }}
     >
-      <TypeIcon type={type} size={20} />
+      <TypeIcon type={type} size={14} />
       {type}
     </div>
   );
 }
 
-export function TypeSelect({ value, onChange, placeholder = "Type", allowEmpty, exclude = [] }: Props) {
+export function TypeSelect({
+  value,
+  onChange,
+  placeholder = "Type",
+  allowEmpty,
+  exclude = [],
+}: Props) {
   return (
     <Select
       value={value || "__none"}
       onValueChange={(v) => onChange(v === "__none" ? "" : (v as PokeType))}
     >
-      <SelectTrigger className="h-11 px-2">
+      <SelectTrigger className="h-10 px-3 bg-black border border-charcoal text-white hover:border-white/40 focus:ring-1 focus:ring-primary rounded-none uppercase tracking-wider text-[10px] font-bold transition-colors">
         <SelectValue placeholder={placeholder}>
           {value ? (
             <span className="flex items-center gap-2">
-              <TypeIcon type={value} size={22} />
-              <span className="text-sm">{value}</span>
+              <TypeIcon type={value} size={18} />
+              <span className="text-[10px] tracking-widest font-black uppercase text-white">
+                {value}
+              </span>
             </span>
           ) : (
-            <span className="text-muted-foreground text-sm">{placeholder}</span>
+            <span className="text-white/40 text-[10px] tracking-wider font-bold uppercase">
+              {placeholder}
+            </span>
           )}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent>
-        {allowEmpty && <SelectItem value="__none">— None —</SelectItem>}
+      <SelectContent className="bg-black border border-charcoal rounded-none text-white">
+        {allowEmpty && (
+          <SelectItem
+            value="__none"
+            className="uppercase tracking-widest text-[10px] text-white/50 focus:bg-charcoal focus:text-white rounded-none cursor-pointer"
+          >
+            — None —
+          </SelectItem>
+        )}
         {TYPES.filter((t) => !exclude.includes(t)).map((t) => (
-          <SelectItem key={t} value={t}>
+          <SelectItem
+            key={t}
+            value={t}
+            className="uppercase tracking-widest text-[10px] focus:bg-charcoal focus:text-white rounded-none cursor-pointer"
+          >
             <span className="flex items-center gap-2">
-              <TypeIcon type={t} size={22} />
+              <TypeIcon type={t} size={18} />
               {t}
             </span>
           </SelectItem>
